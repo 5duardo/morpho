@@ -16,6 +16,8 @@ const {
   setSettings
 } = require('./historyStore');
 
+app.setName('Morpho');
+
 let mainWindow;
 
 function sendUpdateStatus(payload) {

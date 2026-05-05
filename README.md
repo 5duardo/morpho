@@ -1,5 +1,9 @@
 # Morpho
 
+<p align="center">
+	<img src="src/renderer/assets/logo.png" alt="Logo de Morpho" width="140">
+</p>
+
 Morpho es una aplicacion de escritorio para convertir archivos multimedia de forma rapida y en lote. Esta pensada para personas que quieren cambiar el formato de varios archivos a la vez sin tener que hacerlo uno por uno.
 
 ## Que puedes hacer
