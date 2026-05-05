@@ -51,18 +51,22 @@ async function convertImage({ inputPath, outputPath, format, settings, onProgres
     await convertToBmp(temporaryPath, outputPath);
     fs.rmSync(temporaryPath, { force: true });
     onProgress(100);
+    const outputSize = fs.statSync(outputPath).size;
     return {
       outputPath,
-      fileName: path.basename(outputPath)
+      fileName: path.basename(outputPath),
+      outputSize
     };
   }
 
   await pipeline.toFile(outputPath);
   onProgress(100);
+  const outputSize = fs.statSync(outputPath).size;
 
   return {
     outputPath,
-    fileName: path.basename(outputPath)
+    fileName: path.basename(outputPath),
+    outputSize
   };
 }
 

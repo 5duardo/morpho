@@ -47,9 +47,11 @@ function convertMedia({ inputPath, outputPath, type, settings, onProgress }) {
       .on('progress', (progress) => onProgress(Math.max(0, Math.min(99, Math.round(progress.percent || 0)))))
       .on('end', () => {
         onProgress(100);
+        const outputSize = fs.statSync(outputPath).size;
         resolve({
           outputPath,
-          fileName: path.basename(outputPath)
+          fileName: path.basename(outputPath),
+          outputSize
         });
       })
       .on('error', reject)

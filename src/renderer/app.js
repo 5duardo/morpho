@@ -1,5 +1,16 @@
 const api = window.formatChange;
 
+function paintIcons(scope = document) {
+  if (!api?.getIcon) return;
+  scope.querySelectorAll('[data-icon]').forEach((element) => {
+    element.innerHTML = api.getIcon(element.dataset.icon) || '';
+  });
+}
+
+function icon(name, className = 'icon') {
+  return `<span class="${className}" aria-hidden="true" data-icon="${name}"></span>`;
+}
+
 const state = {
   files: [],
   formats: { video: [], image: [], audio: [] },
@@ -36,7 +47,7 @@ const els = {
 const translations = {
   es: {
     appTitle: 'Morpho',
-    nav: { convert: 'Convertir', history: 'Historial', favorites: 'Favoritos', settings: 'Ajustes' },
+    nav: { convert: 'Convertir', optimize: 'Optimizar', history: 'Historial', favorites: 'Favoritos', settings: 'Ajustes' },
     sidebar: { noteLabel: 'Versión actual' },
     brand: { subtitle: 'Conversor multimedia' },
     converter: {
@@ -79,6 +90,25 @@ const translations = {
     },
     history: { title: 'Historial', clear: 'Borrar historial', empty: 'Aun no hay conversiones.' },
     favorites: { title: 'Configuraciones favoritas', empty: 'Guarda presets para reutilizarlos aqui.' },
+    optimizer: {
+      eyebrow: 'Reducción de peso',
+      title: 'Optimiza archivos sin perder calidad',
+      selectFiles: 'Elegir archivos',
+      quality: 'Nivel de compresión',
+      lossless: 'Sin pérdida',
+      balanced: 'Balanceado',
+      max: 'Máxima compresión',
+      outputLabel: 'Carpeta de destino',
+      sameFolderPlaceholder: 'Misma carpeta',
+      selectFolder: 'Destino',
+      start: 'Optimizar',
+      progress: 'Progreso',
+      filesTitle: 'Cola de archivos',
+      clear: 'Vaciar',
+      dropTitle: 'Arrastra o selecciona archivos para optimizar',
+      dropHint: 'Compatible con imagen, video y audio',
+      none: 'Sin archivos cargados'
+    },
     settings: {
       eyebrow: 'Preferences',
       title: 'Ajustes',
@@ -119,7 +149,7 @@ const translations = {
   },
   en: {
     appTitle: 'Morpho',
-    nav: { convert: 'Convert', history: 'History', favorites: 'Favorites', settings: 'Settings' },
+    nav: { convert: 'Convert', optimize: 'Optimize', history: 'History', favorites: 'Favorites', settings: 'Settings' },
     sidebar: { noteLabel: 'Current version' },
     brand: { subtitle: 'Multimedia converter' },
     converter: {
@@ -162,6 +192,25 @@ const translations = {
     },
     history: { title: 'History', clear: 'Clear history', empty: 'No conversions yet.' },
     favorites: { title: 'Favorite settings', empty: 'Save presets to reuse them here.' },
+    optimizer: {
+      eyebrow: 'File size reduction',
+      title: 'Optimize files without losing quality',
+      selectFiles: 'Choose files',
+      quality: 'Compression level',
+      lossless: 'Lossless',
+      balanced: 'Balanced',
+      max: 'Maximum compression',
+      outputLabel: 'Destination folder',
+      sameFolderPlaceholder: 'Same folder',
+      selectFolder: 'Destination',
+      start: 'Optimize',
+      progress: 'Progress',
+      filesTitle: 'File queue',
+      clear: 'Empty',
+      dropTitle: 'Drop or select files to optimize',
+      dropHint: 'Image, video and audio supported',
+      none: 'No files loaded'
+    },
     settings: {
       eyebrow: 'Preferences',
       title: 'Settings',
@@ -227,6 +276,7 @@ function applyLanguage() {
   document.querySelectorAll('[data-i18n-placeholder]').forEach((element) => {
     element.setAttribute('placeholder', translate(element.dataset.i18nPlaceholder));
   });
+  paintIcons(document);
 }
 
 function setLanguage(language, persist = false) {
@@ -268,12 +318,12 @@ const settingIds = {
 };
 
 const icons = {
-  audio: '<span class="preview-icon"><svg viewBox="0 0 24 24"><path d="M9 18V6l10-2v12h-2V8.4l-6 1.2V18H9Zm-3 2a3 3 0 1 1 0-6 3 3 0 0 1 0 6Zm10 0a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z"/></svg></span>',
-  open: '<span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 5h6v2H7v10h10v-4h2v6H5V5Zm8 0h6v6h-2V8.4l-6.3 6.3-1.4-1.4L15.6 7H13V5Z"/></svg></span>',
-  save: '<span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 3h12l2 2v16H5V3Zm2 2v14h10V6.2L15.8 5H15v5H9V5H7Zm4 0v3h2V5h-2Zm-1 9h4v2h-4v-2Z"/></svg></span>',
-  folder: '<span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 6h7l2 2h9v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6Zm2 4v8h14v-8H5Z"/></svg></span>',
-  check: '<span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 16.2-3.5-3.5L4 14.2 9 19 20.5 7.5 19 6 9 16.2Z"/></svg></span>',
-  trash: '<span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4h10l1 2h4v2H2V6h4l1-2Zm-1 6h12l-1 11H7L6 10Zm4 2v7h2v-7h-2Zm4 0v7h2v-7h-2Z"/></svg></span>'
+  audio: icon('Music', 'preview-icon'),
+  open: icon('ExternalLink'),
+  save: icon('Save'),
+  folder: icon('FolderOpen'),
+  check: icon('Check'),
+  trash: icon('Trash2')
 };
 
 function formatSize(bytes) {
@@ -296,7 +346,16 @@ function renderGlobalFormats() {
 function renderFiles() {
   els.fileList.classList.toggle('empty', state.files.length === 0);
   if (!state.files.length) {
-    els.fileList.innerHTML = `<p class="file-meta empty-copy">${translate('converter.none')}</p>`;
+    els.fileList.innerHTML = `
+      <div class="empty-drop" id="emptyDropArea">
+        <span class="drop-icon" aria-hidden="true" data-icon="Download"></span>
+        <div>
+          <strong data-i18n="converter.dropTitle">${translate('converter.dropTitle')}</strong>
+          <span class="file-meta" data-i18n="converter.dropHint">${translate('converter.dropHint')}</span>
+        </div>
+      </div>
+    `;
+    paintIcons(els.fileList);
     return;
   }
   els.fileList.innerHTML = state.files.map((file) => {
@@ -321,10 +380,10 @@ function renderFiles() {
         <div class="preview">${preview}</div>
         <div>
           <div class="file-name" title="${file.path}">${file.name}</div>
-          <div class="file-meta">${file.type} &middot; ${formatSize(file.size)}</div>
+          <div class="file-meta">${file.type} &middot; ${formatSize(file.size)}${file.outputSize ? ` → ${formatSize(file.outputSize)} (${file.outputSize < file.size ? '-' : '+'}${Math.abs(Math.round((1 - file.outputSize / file.size) * 100))}%)` : ''}</div>
           <div class="format-route" aria-label="Formato original ${file.extension.toUpperCase()} a ${targetFormat.toUpperCase()}">
             <span class="format-badge source">${file.extension.toUpperCase()}</span>
-            <span class="route-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M13.2 5.3 20 12l-6.8 6.7-1.4-1.4 4.4-4.3H4v-2h12.2l-4.4-4.3 1.4-1.4Z"/></svg></span>
+            ${icon('ArrowRightLeft', 'route-arrow')}
             <span class="format-badge target">${targetFormat.toUpperCase()}</span>
           </div>
           <div class="progress"><span style="width:${file.progress || 0}%"></span></div>
@@ -339,6 +398,7 @@ function renderFiles() {
       </article>
     `;
   }).join('');
+  paintIcons(els.fileList);
 }
 
 function renderHistory() {
@@ -351,7 +411,8 @@ function renderHistory() {
       <button class="ghost small" data-open="${item.outputPath}">${icons.open}${translate('actions.open')}</button>
       <button class="ghost small" data-folder="${item.outputPath}">${icons.folder}${translate('actions.folder')}</button>
     </article>
-  `).join('') : `<p class="file-meta">${translate('history.empty')}</p>`;
+    `).join('') : `<p class="file-meta">${translate('history.empty')}</p>`;
+    paintIcons(els.historyList);
 }
 
 function renderFavorites() {
@@ -364,7 +425,8 @@ function renderFavorites() {
       <button class="ghost small" data-apply-favorite="${favorite.id}">${icons.check}${translate('actions.apply')}</button>
       <button class="ghost small" data-delete-favorite="${favorite.id}">${icons.trash}${translate('actions.delete')}</button>
     </article>
-  `).join('') : `<p class="file-meta">${translate('favorites.empty')}</p>`;
+    `).join('') : `<p class="file-meta">${translate('favorites.empty')}</p>`;
+    paintIcons(els.favoriteList);
 }
 
 function mergeFiles(files) {
@@ -472,6 +534,11 @@ els.fileList.addEventListener('change', (event) => {
 });
 
 els.fileList.addEventListener('click', async (event) => {
+  if (event.target.closest('#emptyDropArea')) {
+    mergeFiles(await api.selectFiles());
+    return;
+  }
+
   const removeId = event.target.closest('[data-remove-file]')?.dataset.removeFile;
   if (removeId) {
     state.files = state.files.filter((file) => file.id !== removeId);
@@ -597,8 +664,16 @@ els.checkUpdatesBtn.addEventListener('click', async () => {
 });
 
 api.onFileUpdate((update) => {
-  state.files = state.files.map((file) => file.id === update.id ? { ...file, ...update } : file);
-  renderFiles();
+  // Update converter files
+  if (state.files.some((f) => f.id === update.id)) {
+    state.files = state.files.map((file) => file.id === update.id ? { ...file, ...update } : file);
+    renderFiles();
+  }
+  // Update optimizer files
+  if (optimizerState.files.some((f) => f.id === update.id)) {
+    optimizerState.files = optimizerState.files.map((f) => f.id === update.id ? { ...f, ...update } : f);
+    renderOptFiles();
+  }
 });
 
 api.onBatchUpdate(({ completed, total }) => updateOverallProgress(completed, total));
@@ -611,6 +686,137 @@ api.onDone(async (batch) => {
   state.history = data.history;
   renderHistory();
 });
+
+// ── Optimizer ──────────────────────────────────────────────────
+const optimizerState = { files: [], outputDirectory: '' };
+
+const optEls = {
+  selectBtn: document.querySelector('#optimizeSelectBtn'),
+  outputBtn: document.querySelector('#optimizeOutputBtn'),
+  output: document.querySelector('#optimizeOutput'),
+  startBtn: document.querySelector('#optimizeStartBtn'),
+  clearBtn: document.querySelector('#optimizeClearBtn'),
+  fileList: document.querySelector('#optimizeFileList'),
+  dropZone: document.querySelector('#optimizeDropZone'),
+  progressText: document.querySelector('#optimizeProgressText'),
+  progressBar: document.querySelector('#optimizeProgressBar'),
+  quality: document.querySelector('#optimizeQuality')
+};
+
+function renderOptFiles() {
+  optEls.fileList.classList.toggle('empty', optimizerState.files.length === 0);
+  if (!optimizerState.files.length) {
+    optEls.fileList.innerHTML = `
+      <div class="empty-drop" id="optEmptyDrop">
+        <span class="drop-icon" aria-hidden="true" data-icon="Download"></span>
+        <div>
+          <strong>${translate('optimizer.dropTitle')}</strong>
+          <span class="file-meta">${translate('optimizer.dropHint')}</span>
+        </div>
+      </div>
+    `;
+    paintIcons(optEls.fileList);
+    return;
+  }
+  optEls.fileList.innerHTML = optimizerState.files.map((file) => {
+    const preview = file.type === 'image'
+      ? `<img src="${file.previewUrl}" alt="">`
+      : file.type === 'video'
+        ? `<video src="${file.previewUrl}" muted></video>`
+        : file.type === 'audio'
+          ? icons.audio
+          : file.extension;
+    const sizeInfo = file.outputSize
+      ? ` → ${formatSize(file.outputSize)} (${file.outputSize < file.size ? '-' : '+'}${Math.abs(Math.round((1 - file.outputSize / file.size) * 100))}%)`
+      : '';
+    return `
+      <article class="file-item" data-id="${file.id}">
+        <div class="preview">${preview}</div>
+        <div>
+          <div class="file-name" title="${file.path}">${file.name}</div>
+          <div class="file-meta">${file.type} · ${formatSize(file.size)}${sizeInfo}</div>
+          <div class="progress"><span style="width:${file.progress || 0}%"></span></div>
+        </div>
+        <span></span>
+        <span class="status ${file.status}">${statusLabel(file.status)}</span>
+        <div class="file-actions">
+          <button class="ghost small icon-only" type="button" data-opt-remove="${file.id}">${icons.trash}</button>
+        </div>
+      </article>
+    `;
+  }).join('');
+  paintIcons(optEls.fileList);
+}
+
+function mergeOptFiles(files) {
+  const existing = new Set(optimizerState.files.map((f) => f.path));
+  optimizerState.files = [...optimizerState.files, ...files.filter((f) => !existing.has(f.path))];
+  renderOptFiles();
+}
+
+optEls.selectBtn.addEventListener('click', async () => mergeOptFiles(await api.selectFiles()));
+
+optEls.outputBtn.addEventListener('click', async () => {
+  const folder = await api.selectFolder();
+  if (!folder) return;
+  optimizerState.outputDirectory = folder;
+  optEls.output.value = folder;
+});
+
+optEls.clearBtn.addEventListener('click', () => {
+  optimizerState.files = [];
+  optEls.progressText.textContent = '0%';
+  optEls.progressBar.style.width = '0%';
+  renderOptFiles();
+});
+
+optEls.fileList.addEventListener('click', async (event) => {
+  if (event.target.closest('#optEmptyDrop')) {
+    mergeOptFiles(await api.selectFiles());
+    return;
+  }
+  const removeId = event.target.closest('[data-opt-remove]')?.dataset.optRemove;
+  if (removeId) {
+    optimizerState.files = optimizerState.files.filter((f) => f.id !== removeId);
+    renderOptFiles();
+  }
+});
+
+optEls.dropZone.addEventListener('dragover', (event) => {
+  event.preventDefault();
+  optEls.dropZone.classList.add('dragover');
+});
+optEls.dropZone.addEventListener('dragleave', () => optEls.dropZone.classList.remove('dragover'));
+optEls.dropZone.addEventListener('drop', async (event) => {
+  event.preventDefault();
+  optEls.dropZone.classList.remove('dragover');
+  const paths = [...event.dataTransfer.files].map((f) => api.getPathForFile(f)).filter(Boolean);
+  mergeOptFiles(await api.filesFromDrop(paths));
+});
+
+optEls.startBtn.addEventListener('click', async () => {
+  if (!optimizerState.files.length) return;
+  optimizerState.files = optimizerState.files.map((f) => ({ ...f, status: 'pending', progress: 0 }));
+  renderOptFiles();
+  // Re-use convert with same-format to optimize
+  const result = await api.startConversion({
+    files: optimizerState.files.map((f) => ({ ...f, outputFormat: f.extension })),
+    globalFormat: '',
+    outputDirectory: optimizerState.outputDirectory,
+    settings: {
+      video: { resolution: 'source', bitrate: '2500k', fps: 30 },
+      audio: { bitrate: '128k', sampleRate: 44100, channels: 'stereo' },
+      image: { quality: optEls.quality.value === 'max' ? 60 : optEls.quality.value === 'balanced' ? 75 : 95, width: '', height: '' },
+      concurrency: 1
+    }
+  });
+  if (result) {
+    optimizerState.files = result.results || optimizerState.files;
+    renderOptFiles();
+  }
+});
+
+renderOptFiles();
 
 async function init() {
   const data = await api.getAppData();
@@ -626,6 +832,7 @@ async function init() {
   applyTheme(data.settings?.theme || 'dark');
   setLanguage(data.settings?.language || 'es');
   setUpdateStatus('updateIdle');
+  paintIcons(document);
 }
 
 init();

@@ -1,4 +1,29 @@
 const { contextBridge, ipcRenderer, webUtils } = require('electron');
+const lucide = require('lucide-static/dist/cjs/lucide-static.js');
+
+const icons = {
+  ArrowLeftRight: lucide.ArrowLeftRight,
+  ArrowRightLeft: lucide.ArrowRightLeft,
+  Check: lucide.Check,
+  Download: lucide.Download,
+  ExternalLink: lucide.ExternalLink,
+  FileArchive: lucide.FileArchive,
+  FolderOpen: lucide.FolderOpen,
+  Gauge: lucide.Gauge,
+  History: lucide.History,
+  Image: lucide.Image,
+  MoonStar: lucide.MoonStar,
+  Music: lucide.Music,
+  RefreshCw: lucide.RefreshCw,
+  Save: lucide.Save,
+  SaveAll: lucide.SaveAll,
+  Settings2: lucide.Settings2,
+  Star: lucide.Star,
+  SunMedium: lucide.SunMedium,
+  Trash2: lucide.Trash2,
+  Upload: lucide.Upload,
+  Video: lucide.Video
+};
 
 contextBridge.exposeInMainWorld('formatChange', {
   getPathForFile: (file) => webUtils.getPathForFile(file),
@@ -18,6 +43,7 @@ contextBridge.exposeInMainWorld('formatChange', {
   deleteFavorite: (id) => ipcRenderer.invoke('favorites:delete', id),
   setSettings: (settings) => ipcRenderer.invoke('settings:set', settings),
   checkForUpdates: () => ipcRenderer.invoke('updates:check'),
+  getIcon: (name) => icons[name] || '',
   onFileUpdate: (callback) => ipcRenderer.on('convert:file-update', (_event, data) => callback(data)),
   onBatchUpdate: (callback) => ipcRenderer.on('convert:batch-update', (_event, data) => callback(data)),
   onDone: (callback) => ipcRenderer.on('convert:done', (_event, data) => callback(data)),
