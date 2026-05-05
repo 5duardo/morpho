@@ -27,8 +27,239 @@ const els = {
   clearHistoryBtn: document.querySelector('#clearHistoryBtn'),
   saveFavoriteBtn: document.querySelector('#saveFavoriteBtn'),
   themeToggle: document.querySelector('#themeToggle'),
-  languageSelect: document.querySelector('#languageSelect')
+  languageSelect: document.querySelector('#languageSelect'),
+  checkUpdatesBtn: document.querySelector('#checkUpdatesBtn'),
+  updateStatus: document.querySelector('#updateStatus'),
+  appVersion: document.querySelector('#appVersion')
 };
+
+const translations = {
+  es: {
+    appTitle: 'Morpho',
+    nav: { convert: 'Convertir', history: 'Historial', favorites: 'Favoritos', settings: 'Ajustes' },
+    sidebar: { noteLabel: 'Versión actual' },
+    brand: { subtitle: 'Conversor multimedia' },
+    converter: {
+      eyebrow: 'Conversión en lote',
+      title: 'Convierte archivos multimedia de forma simple',
+      selectFiles: 'Elegir archivos',
+      selectFolder: 'Destino',
+      dropTitle: 'Arrastra o selecciona archivos',
+      dropHint: 'Compatible con video, audio e imagen',
+      globalFormat: 'Formato de salida',
+      outputLabel: 'Carpeta de destino',
+      outputPlaceholder: 'Descargas/Morpho',
+      savePreset: 'Guardar configuración',
+      convert: 'Iniciar conversión',
+      progress: 'Progreso total',
+      filesTitle: 'Cola de archivos',
+      clear: 'Vaciar',
+      advancedSettings: 'Ajustes de conversión',
+      video: 'Video',
+      audio: 'Audio',
+      image: 'Imagen',
+      videoResolution: 'Resolucion',
+      videoBitrate: 'Bitrate',
+      videoFps: 'FPS',
+      original: 'Original',
+      audioBitrate: 'Bitrate',
+      audioSampleRate: 'Sample rate',
+      audioChannels: 'Canales',
+      stereo: 'Estereo',
+      mono: 'Mono',
+      imageQuality: 'Calidad',
+      imageWidth: 'Ancho max.',
+      imageHeight: 'Alto max.',
+      concurrency: 'Procesamiento',
+      oneByOne: 'Uno por uno',
+      saveAll: 'Guardar todos',
+      exportZip: 'Exportar todo .ZIP',
+      auto: 'Auto',
+      none: 'Sin archivos cargados'
+    },
+    history: { title: 'Historial', clear: 'Borrar historial', empty: 'Aun no hay conversiones.' },
+    favorites: { title: 'Configuraciones favoritas', empty: 'Guarda presets para reutilizarlos aqui.' },
+    settings: {
+      eyebrow: 'Preferences',
+      title: 'Ajustes',
+      appearanceTitle: 'Tema',
+      appearanceHint: 'Elige entre modo claro u oscuro.',
+      darkMode: 'Tema oscuro',
+      toggleHint: 'Activa o desactiva el modo oscuro.',
+      languageTitle: 'Idioma',
+      languageHint: 'Cambia el idioma de la interfaz.',
+      languageLabel: 'Idioma de la app',
+      updateTitle: 'Actualizaciones',
+      updateHint: 'Comprueba si hay una nueva versión disponible.',
+      currentVersion: 'Versión instalada',
+      checkUpdates: 'Buscar actualizaciones',
+      updateIdle: 'La app revisa actualizaciones al iniciar.',
+      aboutTitle: 'Acerca de',
+      aboutHint: 'Información del proyecto y del equipo responsable.',
+      developedBy: 'Desarrollado por HYPED',
+      aboutBody: 'Morpho es una herramienta de escritorio para convertir archivos multimedia de forma simple y confiable.',
+      visitSite: 'Ir a HYPED.CENTER',
+      updateUnavailable: 'Las actualizaciones automáticas solo estan disponibles en la version empaquetada.',
+      checking: 'Buscando actualizaciones...',
+      available: 'Actualización disponible: {version}.',
+      none: 'No hay actualizaciones disponibles.',
+      downloading: 'Descargando actualización... {percent}%',
+      downloaded: 'Actualización lista para instalar al cerrar la app.',
+      error: 'No se pudo comprobar actualizaciones.'
+    },
+    status: {
+      pending: 'Pendiente',
+      processing: 'Procesando',
+      completed: 'Completado',
+      error: 'Error'
+    },
+    actions: { open: 'Abrir', save: 'Guardar', apply: 'Aplicar', delete: 'Borrar', folder: 'Carpeta' },
+    language: { es: 'Español', en: 'English' },
+    empty: { history: 'Aun no hay conversiones.', favorites: 'Guarda presets para reutilizarlos aqui.' }
+  },
+  en: {
+    appTitle: 'Morpho',
+    nav: { convert: 'Convert', history: 'History', favorites: 'Favorites', settings: 'Settings' },
+    sidebar: { noteLabel: 'Current version' },
+    brand: { subtitle: 'Multimedia converter' },
+    converter: {
+      eyebrow: 'Batch conversion',
+      title: 'Convert multimedia files with a simple workflow',
+      selectFiles: 'Choose files',
+      selectFolder: 'Destination',
+      dropTitle: 'Drop or select files',
+      dropHint: 'Video, audio and image supported',
+      globalFormat: 'Output format',
+      outputLabel: 'Destination folder',
+      outputPlaceholder: 'Downloads/Morpho',
+      savePreset: 'Save settings',
+      convert: 'Start conversion',
+      progress: 'Total progress',
+      filesTitle: 'File queue',
+      clear: 'Empty',
+      advancedSettings: 'Conversion settings',
+      video: 'Video',
+      audio: 'Audio',
+      image: 'Image',
+      videoResolution: 'Resolution',
+      videoBitrate: 'Bitrate',
+      videoFps: 'FPS',
+      original: 'Source',
+      audioBitrate: 'Bitrate',
+      audioSampleRate: 'Sample rate',
+      audioChannels: 'Channels',
+      stereo: 'Stereo',
+      mono: 'Mono',
+      imageQuality: 'Quality',
+      imageWidth: 'Max width',
+      imageHeight: 'Max height',
+      concurrency: 'Processing',
+      oneByOne: 'One by one',
+      saveAll: 'Save all',
+      exportZip: 'Export all .ZIP',
+      auto: 'Auto',
+      none: 'No files loaded'
+    },
+    history: { title: 'History', clear: 'Clear history', empty: 'No conversions yet.' },
+    favorites: { title: 'Favorite settings', empty: 'Save presets to reuse them here.' },
+    settings: {
+      eyebrow: 'Preferences',
+      title: 'Settings',
+      appearanceTitle: 'Theme',
+      appearanceHint: 'Choose between light and dark mode.',
+      darkMode: 'Dark theme',
+      toggleHint: 'Turn dark mode on or off.',
+      languageTitle: 'Language',
+      languageHint: 'Change the interface language.',
+      languageLabel: 'App language',
+      updateTitle: 'Updates',
+      updateHint: 'Check if a new version is available.',
+      currentVersion: 'Installed version',
+      checkUpdates: 'Check for updates',
+      updateIdle: 'The app checks for updates on startup.',
+      aboutTitle: 'About',
+      aboutHint: 'Project details and the team behind it.',
+      developedBy: 'Developed by HYPED',
+      aboutBody: 'Morpho is a desktop tool for converting multimedia files with a simple and reliable workflow.',
+      visitSite: 'Go to HYPED.CENTER',
+      updateUnavailable: 'Automatic updates are only available in the packaged app.',
+      checking: 'Checking for updates...',
+      available: 'Update available: {version}.',
+      none: 'No updates available.',
+      downloading: 'Downloading update... {percent}%',
+      downloaded: 'Update ready to install when the app closes.',
+      error: 'Could not check for updates.'
+    },
+    status: {
+      pending: 'Pending',
+      processing: 'Processing',
+      completed: 'Completed',
+      error: 'Error'
+    },
+    actions: { open: 'Open', save: 'Save', apply: 'Apply', delete: 'Delete', folder: 'Folder' },
+    language: { es: 'Spanish', en: 'English' },
+    empty: { history: 'No conversions yet.', favorites: 'Save presets to reuse them here.' }
+  }
+};
+
+let activeLanguage = 'es';
+
+function currentStrings() {
+  return translations[activeLanguage] || translations.es;
+}
+
+function translate(path, values = {}) {
+  const segments = path.split('.');
+  let value = currentStrings();
+  for (const segment of segments) {
+    value = value?.[segment];
+  }
+  if (typeof value !== 'string') return path;
+  return value.replace(/\{(\w+)\}/g, (_match, key) => values[key] ?? '');
+}
+
+function applyLanguage() {
+  document.documentElement.lang = activeLanguage;
+  document.title = translate('appTitle');
+  document.querySelectorAll('[data-i18n]').forEach((element) => {
+    element.textContent = translate(element.dataset.i18n);
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach((element) => {
+    element.setAttribute('placeholder', translate(element.dataset.i18nPlaceholder));
+  });
+}
+
+function setLanguage(language, persist = false) {
+  activeLanguage = translations[language] ? language : 'es';
+  if (els.languageSelect) els.languageSelect.value = activeLanguage;
+  applyLanguage();
+  renderFiles();
+  renderHistory();
+  renderFavorites();
+  if (els.updateStatus?.dataset.state) {
+    els.updateStatus.textContent = translate(`settings.${els.updateStatus.dataset.state}`, {
+      version: els.updateStatus.dataset.version,
+      percent: els.updateStatus.dataset.percent
+    });
+  }
+  if (persist) api.setSettings({ language: activeLanguage });
+}
+
+function applyTheme(theme, persist = false) {
+  const isDark = theme !== 'light';
+  document.body.classList.toggle('light', !isDark);
+  if (els.themeToggle) els.themeToggle.checked = isDark;
+  if (persist) api.setSettings({ theme: isDark ? 'dark' : 'light' });
+}
+
+function setUpdateStatus(state, values = {}) {
+  if (!els.updateStatus) return;
+  const messageKey = state === 'unavailable' ? 'updateUnavailable' : state;
+  els.updateStatus.dataset.state = messageKey;
+  els.updateStatus.dataset.version = values.version || '';
+  els.updateStatus.dataset.percent = values.percent || '';
+  els.updateStatus.textContent = translate(`settings.${messageKey}`, values);
+}
 
 const settingIds = {
   video: ['videoResolution', 'videoBitrate', 'videoFps'],
@@ -51,12 +282,7 @@ function formatSize(bytes) {
 }
 
 function statusLabel(status) {
-  return {
-    pending: 'Pendiente',
-    processing: 'Procesando',
-    completed: 'Completado',
-    error: 'Error'
-  }[status] || status;
+  return translate(`status.${status}`);
 }
 
 function allOutputFormats() {
@@ -69,6 +295,10 @@ function renderGlobalFormats() {
 
 function renderFiles() {
   els.fileList.classList.toggle('empty', state.files.length === 0);
+  if (!state.files.length) {
+    els.fileList.innerHTML = `<p class="file-meta empty-copy">${translate('converter.none')}</p>`;
+    return;
+  }
   els.fileList.innerHTML = state.files.map((file) => {
     const formats = state.formats[file.type] || [];
     const targetFormat = file.outputFormat || formats[0] || '';
@@ -81,10 +311,10 @@ function renderFiles() {
           ? icons.audio
           : file.extension;
     const resultAction = file.outputPath
-      ? `<button class="ghost small" data-open-result="${file.outputPath}">${icons.open}Abrir</button>`
+      ? `<button class="ghost small" data-open-result="${file.outputPath}">${icons.open}${translate('actions.open')}</button>`
       : '<span></span>';
     const saveAction = file.outputPath
-      ? `<button class="ghost small" data-save-file="${file.id}">${icons.save}Guardar</button>`
+      ? `<button class="ghost small" data-save-file="${file.id}">${icons.save}${translate('actions.save')}</button>`
       : '';
     return `
       <article class="file-item" data-id="${file.id}">
@@ -118,10 +348,10 @@ function renderHistory() {
         <strong>${item.name}</strong>
         <span>${item.outputFormat?.toUpperCase() || ''} &middot; ${new Date(item.completedAt).toLocaleString()}</span>
       </div>
-      <button class="ghost small" data-open="${item.outputPath}">${icons.open}Abrir</button>
-      <button class="ghost small" data-folder="${item.outputPath}">${icons.folder}Carpeta</button>
+      <button class="ghost small" data-open="${item.outputPath}">${icons.open}${translate('actions.open')}</button>
+      <button class="ghost small" data-folder="${item.outputPath}">${icons.folder}${translate('actions.folder')}</button>
     </article>
-  `).join('') : '<p class="file-meta">Aun no hay conversiones.</p>';
+  `).join('') : `<p class="file-meta">${translate('history.empty')}</p>`;
 }
 
 function renderFavorites() {
@@ -131,10 +361,10 @@ function renderFavorites() {
         <strong>${favorite.name}</strong>
         <span>${new Date(favorite.updatedAt).toLocaleString()}</span>
       </div>
-      <button class="ghost small" data-apply-favorite="${favorite.id}">${icons.check}Aplicar</button>
-      <button class="ghost small" data-delete-favorite="${favorite.id}">${icons.trash}Borrar</button>
+      <button class="ghost small" data-apply-favorite="${favorite.id}">${icons.check}${translate('actions.apply')}</button>
+      <button class="ghost small" data-delete-favorite="${favorite.id}">${icons.trash}${translate('actions.delete')}</button>
     </article>
-  `).join('') : '<p class="file-meta">Guarda presets para reutilizarlos aqui.</p>';
+  `).join('') : `<p class="file-meta">${translate('favorites.empty')}</p>`;
 }
 
 function mergeFiles(files) {
@@ -176,6 +406,37 @@ function applySettings(settings) {
   document.querySelector('#imageWidth').value = settings.image?.width || '';
   document.querySelector('#imageHeight').value = settings.image?.height || '';
   document.querySelector('#concurrency').value = 1;
+}
+
+function bindUpdateStatus(status) {
+  if (!status) return;
+  if (status.state === 'error') {
+    setUpdateStatus('error');
+    return;
+  }
+  if (status.state === 'checking') {
+    setUpdateStatus('checking');
+    return;
+  }
+  if (status.state === 'available') {
+    setUpdateStatus('available', { version: status.version });
+    return;
+  }
+  if (status.state === 'none') {
+    setUpdateStatus('none');
+    return;
+  }
+  if (status.state === 'downloading') {
+    setUpdateStatus('downloading', { percent: Math.round(status.percent || 0) });
+    return;
+  }
+  if (status.state === 'downloaded') {
+    setUpdateStatus('downloaded');
+    return;
+  }
+  if (status.state === 'unavailable') {
+    setUpdateStatus('unavailable');
+  }
 }
 
 function updateOverallProgress(completed, total) {
@@ -318,13 +579,14 @@ document.querySelectorAll('.tab').forEach((button) => {
   });
 });
 
-els.themeToggle.addEventListener('change', async () => {
-  document.body.classList.toggle('light', !els.themeToggle.checked);
-  await api.setSettings({ theme: els.themeToggle.checked ? 'dark' : 'light' });
-});
+els.themeToggle.addEventListener('change', () => applyTheme(els.themeToggle.checked ? 'dark' : 'light', true));
 
-els.languageSelect.addEventListener('change', async () => {
-  await api.setSettings({ language: els.languageSelect.value });
+els.languageSelect.addEventListener('change', () => setLanguage(els.languageSelect.value, true));
+
+els.checkUpdatesBtn.addEventListener('click', async () => {
+  setUpdateStatus('checking');
+  const result = await api.checkForUpdates();
+  if (result?.state) bindUpdateStatus(result);
 });
 
 api.onFileUpdate((update) => {
@@ -333,6 +595,8 @@ api.onFileUpdate((update) => {
 });
 
 api.onBatchUpdate(({ completed, total }) => updateOverallProgress(completed, total));
+
+api.onUpdateStatus((status) => bindUpdateStatus(status));
 
 api.onDone(async (batch) => {
   state.completedBatch = batch;
@@ -346,16 +610,15 @@ async function init() {
   state.formats = data.formats;
   state.history = data.history;
   state.favorites = data.favorites;
+  if (els.appVersion && data.version) els.appVersion.textContent = data.version;
   renderGlobalFormats();
   renderFiles();
   renderHistory();
   renderFavorites();
   applySettings(data.favorites[0]?.settings);
-  if (data.settings?.theme === 'light') {
-    els.themeToggle.checked = false;
-    document.body.classList.add('light');
-  }
-  if (data.settings?.language) els.languageSelect.value = data.settings.language;
+  applyTheme(data.settings?.theme || 'dark');
+  setLanguage(data.settings?.language || 'es');
+  setUpdateStatus('updateIdle');
 }
 
 init();

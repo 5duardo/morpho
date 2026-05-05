@@ -18,17 +18,40 @@ const {
 
 let mainWindow;
 
+function sendUpdateStatus(payload) {
+  if (!mainWindow || mainWindow.isDestroyed()) return;
+  mainWindow.webContents.send('updates:status', payload);
+}
+
 function setupAutoUpdater() {
   if (!app.isPackaged) return;
 
   autoUpdater.autoDownload = true;
   autoUpdater.autoInstallOnAppQuit = true;
 
+  autoUpdater.on('checking-for-update', () => {
+    sendUpdateStatus({ state: 'checking' });
+  });
+
+  autoUpdater.on('update-available', (info) => {
+    sendUpdateStatus({ state: 'available', version: info.version });
+  });
+
+  autoUpdater.on('update-not-available', () => {
+    sendUpdateStatus({ state: 'none' });
+  });
+
+  autoUpdater.on('download-progress', (progress) => {
+    sendUpdateStatus({ state: 'downloading', percent: progress.percent });
+  });
+
   autoUpdater.on('error', (error) => {
     console.error('Auto update error:', error);
+    sendUpdateStatus({ state: 'error' });
   });
 
   autoUpdater.on('update-downloaded', () => {
+    sendUpdateStatus({ state: 'downloaded' });
     if (Notification.isSupported()) {
       new Notification({
         title: 'Actualizacion lista',
@@ -217,7 +240,8 @@ ipcMain.handle('app:data', () => ({
   formats: OUTPUT_FORMATS,
   history: getHistory(),
   favorites: getFavorites(),
-  settings: getSettings()
+  settings: getSettings(),
+  version: app.getVersion()
 }));
 
 ipcMain.handle('history:clear', () => {
@@ -231,3 +255,28 @@ ipcMain.handle('favorites:delete', (_event, id) => {
   return getFavorites();
 });
 ipcMain.handle('settings:set', (_event, settings) => setSettings(settings));
+ipcMain.handle('updates:check', async () => {
+  if (!app.isPackaged) {
+    const payload = { state: 'unavailable' };
+    sendUpdateStatus(payload);
+    return payload;
+  }
+
+  sendUpdateStatus({ state: 'checking' });
+  try {
+    const result = await autoUpdater.checkForUpdates();
+    if (!result) {
+      const payload = { state: 'none' };
+      sendUpdateStatus(payload);
+      return payload;
+    }
+    const payload = { state: 'available', version: result?.updateInfo?.version };
+    sendUpdateStatus(payload);
+    return payload;
+  } catch (error) {
+    console.error('Manual update check failed:', error);
+    const payload = { state: 'error' };
+    sendUpdateStatus(payload);
+    return payload;
+  }
+});

@@ -16,7 +16,9 @@ contextBridge.exposeInMainWorld('formatChange', {
   saveFavorite: (favorite) => ipcRenderer.invoke('favorites:save', favorite),
   deleteFavorite: (id) => ipcRenderer.invoke('favorites:delete', id),
   setSettings: (settings) => ipcRenderer.invoke('settings:set', settings),
+  checkForUpdates: () => ipcRenderer.invoke('updates:check'),
   onFileUpdate: (callback) => ipcRenderer.on('convert:file-update', (_event, data) => callback(data)),
   onBatchUpdate: (callback) => ipcRenderer.on('convert:batch-update', (_event, data) => callback(data)),
-  onDone: (callback) => ipcRenderer.on('convert:done', (_event, data) => callback(data))
+  onDone: (callback) => ipcRenderer.on('convert:done', (_event, data) => callback(data)),
+  onUpdateStatus: (callback) => ipcRenderer.on('updates:status', (_event, data) => callback(data))
 });
