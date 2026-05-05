@@ -1,6 +1,6 @@
 {
   "name": "morpho",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Aplicacion de escritorio para convertir formatos multimedia en lote.",
   "main": "src/main/main.js",
   "author": "Morpho",
