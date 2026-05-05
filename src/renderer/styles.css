@@ -77,9 +77,9 @@ button {
 .sidebar {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 24px;
   border-right: 1px solid var(--line);
-  padding: 24px;
+  padding: 24px 20px;
   background: var(--panel);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -88,14 +88,16 @@ button {
 .brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
+  padding: 4px 6px;
 }
 
 .brand-logo {
   display: block;
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   object-fit: contain;
+  border-radius: 10px;
 }
 
 .icon svg,
@@ -115,14 +117,17 @@ button {
 }
 
 .brand strong {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 750;
+  letter-spacing: -0.01em;
 }
 
 .brand small {
   display: block;
-  margin-top: 1px;
-  font-size: 12px;
+  margin-top: 2px;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
 .eyebrow {
@@ -134,28 +139,63 @@ button {
 
 .nav {
   display: grid;
-  gap: 8px;
+  gap: 4px;
 }
 
 .nav-item {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
-  min-height: 44px;
+  gap: 12px;
+  min-height: 42px;
   padding: 0 14px;
   text-align: left;
   color: var(--muted);
   background: transparent;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
 
-.nav-item.active,
+.nav-item .icon {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
 .nav-item:hover {
   color: var(--text);
   background: var(--panel-2);
 }
 
+.nav-item:hover .icon {
+  opacity: 1;
+}
+
 .nav-item.active {
+  color: var(--text);
+  background: var(--panel-2);
   border: 1px solid var(--line);
+}
+
+.nav-item.active .icon {
+  opacity: 1;
+  color: var(--accent);
+}
+
+.nav-item.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 20px;
+  border-radius: 0 4px 4px 0;
+  background: var(--accent);
 }
 
 .sidebar-footer {
@@ -164,18 +204,21 @@ button {
   justify-content: space-between;
   gap: 12px;
   margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
 }
 
 .sidebar-note {
   display: grid;
-  gap: 3px;
+  gap: 2px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .sidebar-note strong {
   color: var(--text);
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .theme-toggle:hover {
@@ -946,10 +989,20 @@ select:focus {
   white-space: nowrap;
 }
 
+.history-section-title {
+  margin-top: 20px;
+  margin-bottom: 4px;
+  font-size: 14px;
+  font-weight: 720;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
 .records {
   display: grid;
   gap: 10px;
-  margin-top: 16px;
+  margin-top: 10px;
 }
 
 .record {

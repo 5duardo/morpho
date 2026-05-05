@@ -33,7 +33,8 @@ const els = {
   overallProgressBar: document.querySelector('#overallProgressBar'),
   saveAllBtn: document.querySelector('#saveAllBtn'),
   exportZipBtn: document.querySelector('#exportZipBtn'),
-  historyList: document.querySelector('#historyList'),
+  historyConvertList: document.querySelector('#historyConvertList'),
+  historyOptimizeList: document.querySelector('#historyOptimizeList'),
   favoriteList: document.querySelector('#favoriteList'),
   clearHistoryBtn: document.querySelector('#clearHistoryBtn'),
   saveFavoriteBtn: document.querySelector('#saveFavoriteBtn'),
@@ -88,7 +89,7 @@ const translations = {
       auto: 'Auto',
       none: 'Sin archivos cargados'
     },
-    history: { title: 'Historial', clear: 'Borrar historial', empty: 'Aun no hay conversiones.' },
+    history: { title: 'Historial', clear: 'Borrar historial', empty: 'Aun no hay conversiones.', conversions: 'Conversiones', optimizations: 'Optimizaciones', emptyOpt: 'Aun no hay optimizaciones.' },
     favorites: { title: 'Configuraciones favoritas', empty: 'Guarda presets para reutilizarlos aqui.' },
     optimizer: {
       eyebrow: 'Reducción de peso',
@@ -105,6 +106,7 @@ const translations = {
       progress: 'Progreso',
       filesTitle: 'Cola de archivos',
       clear: 'Vaciar',
+      saveAll: 'Guardar todos',
       dropTitle: 'Arrastra o selecciona archivos para optimizar',
       dropHint: 'Compatible con imagen, video y audio',
       none: 'Sin archivos cargados'
@@ -190,7 +192,7 @@ const translations = {
       auto: 'Auto',
       none: 'No files loaded'
     },
-    history: { title: 'History', clear: 'Clear history', empty: 'No conversions yet.' },
+    history: { title: 'History', clear: 'Clear history', empty: 'No conversions yet.', conversions: 'Conversions', optimizations: 'Optimizations', emptyOpt: 'No optimizations yet.' },
     favorites: { title: 'Favorite settings', empty: 'Save presets to reuse them here.' },
     optimizer: {
       eyebrow: 'File size reduction',
@@ -207,6 +209,7 @@ const translations = {
       progress: 'Progress',
       filesTitle: 'File queue',
       clear: 'Empty',
+      saveAll: 'Save all',
       dropTitle: 'Drop or select files to optimize',
       dropHint: 'Image, video and audio supported',
       none: 'No files loaded'
@@ -401,18 +404,30 @@ function renderFiles() {
   paintIcons(els.fileList);
 }
 
-function renderHistory() {
-  els.historyList.innerHTML = state.history.length ? state.history.map((item) => `
+function renderHistoryList(container, items, emptyKey) {
+  container.innerHTML = items.length ? items.map((item) => {
+    const sizeInfo = item.outputSize && item.size
+      ? ` · ${formatSize(item.size)} → ${formatSize(item.outputSize)} (${item.outputSize < item.size ? '-' : '+'}${Math.abs(Math.round((1 - item.outputSize / item.size) * 100))}%)`
+      : '';
+    return `
     <article class="record">
       <div>
         <strong>${item.name}</strong>
-        <span>${item.outputFormat?.toUpperCase() || ''} &middot; ${new Date(item.completedAt).toLocaleString()}</span>
+        <span>${item.outputFormat?.toUpperCase() || ''} · ${new Date(item.completedAt).toLocaleString()}${sizeInfo}</span>
       </div>
       <button class="ghost small" data-open="${item.outputPath}">${icons.open}${translate('actions.open')}</button>
       <button class="ghost small" data-folder="${item.outputPath}">${icons.folder}${translate('actions.folder')}</button>
     </article>
-    `).join('') : `<p class="file-meta">${translate('history.empty')}</p>`;
-    paintIcons(els.historyList);
+    `;
+  }).join('') : `<p class="file-meta">${translate(emptyKey)}</p>`;
+  paintIcons(container);
+}
+
+function renderHistory() {
+  const converts = state.history.filter((h) => h.source !== 'optimizer');
+  const optimizes = state.history.filter((h) => h.source === 'optimizer');
+  renderHistoryList(els.historyConvertList, converts, 'history.empty');
+  renderHistoryList(els.historyOptimizeList, optimizes, 'history.emptyOpt');
 }
 
 function renderFavorites() {
@@ -611,12 +626,14 @@ els.clearHistoryBtn.addEventListener('click', async () => {
   renderHistory();
 });
 
-els.historyList.addEventListener('click', async (event) => {
+function handleHistoryClick(event) {
   const openPath = event.target.closest('[data-open]')?.dataset.open;
   const folderPath = event.target.closest('[data-folder]')?.dataset.folder;
-  if (openPath) await api.openPath(openPath);
-  if (folderPath) await api.openFolder(folderPath);
-});
+  if (openPath) api.openPath(openPath);
+  if (folderPath) api.openFolder(folderPath);
+}
+els.historyConvertList.addEventListener('click', handleHistoryClick);
+els.historyOptimizeList.addEventListener('click', handleHistoryClick);
 
 els.favoriteList.addEventListener('click', async (event) => {
   const applyId = event.target.closest('[data-apply-favorite]')?.dataset.applyFavorite;
@@ -700,7 +717,8 @@ const optEls = {
   dropZone: document.querySelector('#optimizeDropZone'),
   progressText: document.querySelector('#optimizeProgressText'),
   progressBar: document.querySelector('#optimizeProgressBar'),
-  quality: document.querySelector('#optimizeQuality')
+  quality: document.querySelector('#optimizeQuality'),
+  saveAllBtn: document.querySelector('#optimizeSaveAllBtn')
 };
 
 function renderOptFiles() {
@@ -740,6 +758,8 @@ function renderOptFiles() {
         <span></span>
         <span class="status ${file.status}">${statusLabel(file.status)}</span>
         <div class="file-actions">
+          ${file.outputPath ? `<button class="ghost small" data-opt-open="${file.outputPath}">${icons.open}${translate('actions.open')}</button>` : ''}
+          ${file.outputPath ? `<button class="ghost small" data-opt-save="${file.id}">${icons.save}${translate('actions.save')}</button>` : ''}
           <button class="ghost small icon-only" type="button" data-opt-remove="${file.id}">${icons.trash}</button>
         </div>
       </article>
@@ -770,11 +790,26 @@ optEls.clearBtn.addEventListener('click', () => {
   renderOptFiles();
 });
 
+optEls.saveAllBtn.addEventListener('click', async () => {
+  const completed = optimizerState.files.filter((f) => f.outputPath);
+  if (completed.length) await api.saveAll(completed);
+});
+
 optEls.fileList.addEventListener('click', async (event) => {
   if (event.target.closest('#optEmptyDrop')) {
     mergeOptFiles(await api.selectFiles());
     return;
   }
+  const openPath = event.target.closest('[data-opt-open]')?.dataset.optOpen;
+  if (openPath) { await api.openPath(openPath); return; }
+
+  const saveId = event.target.closest('[data-opt-save]')?.dataset.optSave;
+  if (saveId) {
+    const file = optimizerState.files.find((f) => f.id === saveId);
+    if (file) await api.saveFile(file);
+    return;
+  }
+
   const removeId = event.target.closest('[data-opt-remove]')?.dataset.optRemove;
   if (removeId) {
     optimizerState.files = optimizerState.files.filter((f) => f.id !== removeId);
@@ -800,7 +835,7 @@ optEls.startBtn.addEventListener('click', async () => {
   renderOptFiles();
   // Re-use convert with same-format to optimize
   const result = await api.startConversion({
-    files: optimizerState.files.map((f) => ({ ...f, outputFormat: f.extension })),
+    files: optimizerState.files.map((f) => ({ ...f, outputFormat: f.extension, source: 'optimizer' })),
     globalFormat: '',
     outputDirectory: optimizerState.outputDirectory,
     settings: {

@@ -148,7 +148,10 @@
             <div id="optimizeDropZone" class="panel file-panel">
               <div class="panel-header">
                 <h2 data-i18n="optimizer.filesTitle">Cola de archivos</h2>
-                <button id="optimizeClearBtn" class="ghost small"><span class="icon" aria-hidden="true" data-icon="Trash2"></span><span data-i18n="optimizer.clear">Vaciar</span></button>
+                <div class="actions">
+                  <button id="optimizeSaveAllBtn" class="ghost small"><span class="icon" aria-hidden="true" data-icon="SaveAll"></span><span data-i18n="optimizer.saveAll">Guardar todos</span></button>
+                  <button id="optimizeClearBtn" class="ghost small"><span class="icon" aria-hidden="true" data-icon="Trash2"></span><span data-i18n="optimizer.clear">Vaciar</span></button>
+                </div>
               </div>
               <div id="optimizeFileList" class="file-list empty"></div>
             </div>
@@ -160,7 +163,10 @@
             <h1 data-i18n="history.title">Historial</h1>
             <button id="clearHistoryBtn" class="ghost"><span class="icon" aria-hidden="true" data-icon="Trash2"></span><span data-i18n="history.clear">Borrar historial</span></button>
           </header>
-          <div id="historyList" class="records"></div>
+          <h2 class="history-section-title" data-i18n="history.conversions">Conversiones</h2>
+          <div id="historyConvertList" class="records"></div>
+          <h2 class="history-section-title" data-i18n="history.optimizations">Optimizaciones</h2>
+          <div id="historyOptimizeList" class="records"></div>
         </section>
 
         <section id="favoritesView" class="view">
