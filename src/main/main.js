@@ -236,6 +236,11 @@ ipcMain.handle('open:folder', async (_event, folderPath) => {
   await shell.openPath(folderPath);
 });
 
+ipcMain.handle('open:external', async (_event, url) => {
+  if (!url) return;
+  await shell.openExternal(url);
+});
+
 ipcMain.handle('app:data', () => ({
   formats: OUTPUT_FORMATS,
   history: getHistory(),

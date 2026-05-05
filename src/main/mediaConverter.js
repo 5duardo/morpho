@@ -2,7 +2,6 @@ const path = require('path');
 const fs = require('fs');
 const ffmpeg = require('fluent-ffmpeg');
 const ffmpegStatic = require('ffmpeg-static');
-const ffprobeStatic = require('ffprobe-static');
 
 function resourceBinary(name, fallback) {
   if (process.resourcesPath) {
@@ -13,7 +12,6 @@ function resourceBinary(name, fallback) {
 }
 
 ffmpeg.setFfmpegPath(resourceBinary('ffmpeg.exe', ffmpegStatic));
-ffmpeg.setFfprobePath(resourceBinary('ffprobe.exe', ffprobeStatic.path));
 
 const RESOLUTION_MAP = {
   source: null,

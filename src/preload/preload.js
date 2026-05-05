@@ -11,6 +11,7 @@ contextBridge.exposeInMainWorld('formatChange', {
   saveAll: (files) => ipcRenderer.invoke('save:all', files),
   openPath: (path) => ipcRenderer.invoke('open:path', path),
   openFolder: (path) => ipcRenderer.invoke('open:folder', path),
+  openExternal: (url) => ipcRenderer.invoke('open:external', url),
   getAppData: () => ipcRenderer.invoke('app:data'),
   clearHistory: () => ipcRenderer.invoke('history:clear'),
   saveFavorite: (favorite) => ipcRenderer.invoke('favorites:save', favorite),

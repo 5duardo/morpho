@@ -561,6 +561,13 @@ els.favoriteList.addEventListener('click', async (event) => {
   }
 });
 
+document.querySelectorAll('[data-external-url]').forEach((button) => {
+  button.addEventListener('click', async () => {
+    const url = button.dataset.externalUrl;
+    if (url) await api.openExternal(url);
+  });
+});
+
 document.querySelectorAll('.nav-item').forEach((button) => {
   button.addEventListener('click', () => {
     document.querySelectorAll('.nav-item').forEach((item) => item.classList.remove('active'));

@@ -28,7 +28,7 @@ jobs:
       - name: Validate
         run: npm run lint
 
-      - name: Build and publish installer
+      - name: Build and publish
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run build -- --publish always
