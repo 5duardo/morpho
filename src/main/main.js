@@ -57,9 +57,13 @@ function setupAutoUpdater() {
     if (Notification.isSupported()) {
       new Notification({
         title: 'Actualizacion lista',
-        body: 'Morpho instalara la nueva version al cerrar la app.'
+        body: 'Morpho se reiniciara para aplicar la nueva version.'
       }).show();
     }
+
+    setTimeout(() => {
+      autoUpdater.quitAndInstall(true, true);
+    }, 1500);
   });
 
   autoUpdater.checkForUpdatesAndNotify().catch((error) => {

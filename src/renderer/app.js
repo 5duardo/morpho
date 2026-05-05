@@ -104,7 +104,7 @@ const translations = {
       available: 'Actualización disponible: {version}.',
       none: 'No hay actualizaciones disponibles.',
       downloading: 'Descargando actualización... {percent}%',
-      downloaded: 'Actualización lista para instalar al cerrar la app.',
+      downloaded: 'Actualización descargada. La app se reiniciará para aplicarla.',
       error: 'No se pudo comprobar actualizaciones.'
     },
     status: {
@@ -187,7 +187,7 @@ const translations = {
       available: 'Update available: {version}.',
       none: 'No updates available.',
       downloading: 'Downloading update... {percent}%',
-      downloaded: 'Update ready to install when the app closes.',
+      downloaded: 'Update downloaded. The app will restart to apply it.',
       error: 'Could not check for updates.'
     },
     status: {
