@@ -1,57 +1,62 @@
 # Morpho
 
-Aplicacion de escritorio con Electron para convertir archivos multimedia en lote.
+Morpho es una aplicacion de escritorio para convertir archivos multimedia de forma rapida y en lote. Esta pensada para personas que quieren cambiar el formato de varios archivos a la vez sin tener que hacerlo uno por uno.
 
-## Funciones
+## Que puedes hacer
 
-- Carga multiple por selector manual y drag & drop.
-- Soporte de video, imagen y audio:
-  - Video: MP4, AVI, MOV, MKV, WEBM
-  - Imagen: JPG, PNG, WEBP, BMP, GIF
-  - Audio: MP3, WAV, AAC, OGG, FLAC
-- Conversion por lote con formato global o formato individual por archivo.
-- Progreso por archivo y progreso general.
-- Exportacion de archivos convertidos y empaquetado `.zip`.
-- Ajustes avanzados para video, audio e imagen.
-- Historial, presets favoritos, tema oscuro y base para multilenguaje.
+- Arrastrar y soltar archivos o agregarlos manualmente.
+- Convertir varios archivos al mismo tiempo.
+- Elegir un formato global para todo el lote o ajustar uno distinto por archivo.
+- Ver el progreso de cada conversion y del proceso completo.
+- Guardar y exportar los archivos resultantes, incluso en `.zip`.
+- Usar ajustes avanzados para video, audio e imagen.
+- Recuperar configuraciones frecuentes con historial y presets favoritos.
+
+## Formatos compatibles
+
+Video:
+- MP4
+- AVI
+- MOV
+- MKV
+- WEBM
+
+Imagen:
+- JPG
+- PNG
+- WEBP
+- BMP
+- GIF
+
+Audio:
+- MP3
+- WAV
+- AAC
+- OGG
+- FLAC
+
+## Como usarlo
+
+1. Abre Morpho.
+2. Agrega uno o varios archivos.
+3. Elige el formato de salida que necesites.
+4. Ajusta opciones si quieres cambiar calidad, conversion o comportamiento de salida.
+5. Inicia la conversion y espera a que termine.
+6. Guarda los archivos generados en la carpeta que prefieras.
 
 ## Requisitos
 
-- Node.js 20 o superior.
-- Windows para generar instalador `.exe`.
+- Windows para ejecutar la app o generar el instalador `.exe`.
+- Node.js 20 o superior si vas a ejecutarla desde el codigo fuente.
 
-## Instalacion
+## Descargar
 
-```powershell
-npm.cmd install
-```
+La version mas reciente se puede descargar desde GitHub Releases:
 
-## Desarrollo
+[Descargar Morpho](https://github.com/5duardo/morpho/releases/latest)
 
-```powershell
-npm.cmd run dev
-```
+En esa pagina vas a encontrar el instalador `setup` mas reciente para Windows.
 
-## Verificacion rapida
+## Actualizaciones
 
-```powershell
-npm.cmd run lint
-```
-
-## Generar .exe
-
-```powershell
-npm.cmd run build
-```
-
-El instalador queda en `dist/`.
-
-## Auto updates
-
-Morpho usa `electron-updater` y GitHub Releases. Para publicar una version:
-
-1. Sube el codigo al repositorio `5duardo/morpho`.
-2. Crea un tag semver, por ejemplo `v1.0.1`.
-3. Empuja el tag a GitHub.
-
-El workflow de release construye el instalador NSIS, crea la release y publica `latest.yml`, que Morpho consulta al iniciar cuando esta empaquetado.
+Morpho puede actualizarse automaticamente cuando esta empaquetado y publicado en GitHub Releases.
