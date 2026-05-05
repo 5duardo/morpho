@@ -28,17 +28,7 @@ jobs:
       - name: Validate
         run: npm run lint
 
-      - name: Build installer
-        run: npm run build
-
-      - name: Publish GitHub release assets
-        uses: softprops/action-gh-release@v2
+      - name: Build and publish installer
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          fail_on_unmatched_files: true
-          files: |
-            dist/*.exe
-            dist/*.blockmap
-            dist/latest.yml
-            dist/*.yml
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run build -- --publish always
